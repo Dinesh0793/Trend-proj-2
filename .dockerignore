@@ -1,0 +1,39 @@
+# Docker ignore for Trendify React App
+
+# Git
+.git
+.gitignore
+
+# Node modules (not needed since we only use dist)
+node_modules
+
+# Documentation
+README.md
+docs/
+
+# Terraform files
+*.tf
+.terraform/
+*.tfstate*
+
+# Kubernetes configs (kept separate)
+k8s/
+
+# Jenkins
+Jenkinsfile
+
+# Editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Test files
+*.test.js
+__tests__/
