@@ -67,7 +67,7 @@ pipeline {
             steps {
                 echo '🚀 Deploying to Kubernetes EKS...'
                 sh """
-                    kubectl apply -f ${K8S_DEPLOYMENT_FILE}
+                    kubectl apply -f ${K8S_DEPLOYMENT_FILE} --validate=false
                     kubectl rollout status deployment/trendify-deployment --timeout=120s
                 """
             }
@@ -79,6 +79,21 @@ pipeline {
                 sh '''
                     kubectl get pods -l app=trendify
                     kubectl get service trendify-service
+                '''
+            }
+        }
+
+        stage('Deploy Monitoring Stack') {
+            steps {
+                echo '📊 Deploying Prometheus + Grafana monitoring stack...'
+                sh '''
+                    kubectl apply -f k8s/monitoring/prometheus-configmap.yaml --validate=false
+                    kubectl apply -f k8s/monitoring/prometheus-deployment.yaml --validate=false
+                    kubectl apply -f k8s/monitoring/grafana-deployment.yaml --validate=false
+                    kubectl rollout status deployment/prometheus -n monitoring --timeout=120s
+                    kubectl rollout status deployment/grafana -n monitoring --timeout=120s
+                    echo "✅ Monitoring stack deployed!"
+                    kubectl get all -n monitoring
                 '''
             }
         }
