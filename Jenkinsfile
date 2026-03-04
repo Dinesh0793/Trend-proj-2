@@ -87,8 +87,9 @@ pipeline {
             steps {
                 echo '📊 Deploying Prometheus + Grafana monitoring stack...'
                 sh '''
-                    kubectl apply -f k8s/monitoring/prometheus-deployment.yaml --validate=false
+                    kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
                     kubectl apply -f k8s/monitoring/prometheus-configmap.yaml --validate=false
+                    kubectl apply -f k8s/monitoring/prometheus-deployment.yaml --validate=false
                     kubectl apply -f k8s/monitoring/grafana-deployment.yaml --validate=false
                     kubectl rollout status deployment/prometheus -n monitoring --timeout=120s
                     kubectl rollout status deployment/grafana -n monitoring --timeout=120s
